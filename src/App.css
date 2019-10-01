@@ -1,22 +1,27 @@
-.App {
-  text-align: center;
+body{
+    box-sizing:border-box;
+}
+.App{
+    margin:10px;
+    padding: 10px; 
 }
 
-.App-logo {
-  height: 40vmin;
+.WeatherNav{
+    display:flex;
+    flex-direction:row;
+    align-content: center;
+    justify-content: flex-end;
+    margin:20px auto;
+    max-width: 1080px;
+    width:100%;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.WeatherNavItem{
+  margin:0 20px;
+  padding: 10px;
 }
 
-.App-link {
-  color: #09d3ac;
+.WeatherNavItem--active{
+  background-color: azure;
+  color:red;
 }
