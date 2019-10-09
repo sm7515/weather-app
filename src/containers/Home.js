@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import WeatherIcon from '../components/WeatherIcon';
 import GetDateStr from '../components/GetDateStr';
-//import PageWrapper from '../components/PageWrapper';
+import PageWrapper from '../components/PageWrapper';
 
 export default function Home(props){
     const apiKey="1c21be6b762ca0d7fa474238dda57f8a";
@@ -15,6 +15,7 @@ export default function Home(props){
     const [F,setF]=useState();
     const [C, setC] = useState();
     const [tempType, setTempType]=useState('C');
+    const [night, isNight] = useState(false);
 
     const queryWeatherAPI = function (cityParam) {
         axios.get(`http://api.openweathermap.org/data/2.5/weather?q=${cityParam}&units=metric&APPID=${apiKey}`)
@@ -58,48 +59,72 @@ export default function Home(props){
         setDate(new Date());
     }, []);
 
-    const today = new Date(date);
+    const today = localTime(date, weather.timezone/3600);
+    let hour=today.getHours();
+    useEffect(()=>{
+        if (hour >= 18 || hour <= 6)
+            isNight(true);
+    })
 
     // debug stuff
     console.log(weather&&weather)
-    console.log(type && type.trim())
-    console.log(F);
+    // // console.log(type && type.trim())
+    // // console.log(F);
+    // console.log(date)
+    // console.log(weather.timezone)
+
+    function localTime(date, offset) {
+        const d = new Date(date);
+        const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+        const nd = new Date(utc + (3600000 * offset));
+        return nd;
+    }
 
     return(
-       // <PageWrapper cloudy={cloudy}>
+       <PageWrapper cloudy={cloudy} hour={hour}>
        <div>
             <div className='WeatherNav'>
-                <a className={`WeatherNavItem ${city === 'Beijing' ? "WeatherNavItem--active":''}`} href='/?city=Beijing'>Beijing</a>
-                <a className={`WeatherNavItem ${city === 'Shanghai' ? "WeatherNavItem--active" : ''}`} href='/?city=Shanghai'>Shanghai</a>
-                <a className={`WeatherNavItem ${city === 'Tokyo' ? "WeatherNavItem--active" : ''}`} href='/?city=Tokyo'>Tokyo</a>
-                <a className={`WeatherNavItem ${city === 'Seoul' ? "WeatherNavItem--active" : ''}`} href='/?city=Seoul'>Seoul</a>
-                <a className={`WeatherNavItem ${city === 'London' ? "WeatherNavItem--active" : ''}`} href='/?city=London'>London</a>
-                <a className={`WeatherNavItem ${city === 'New York' ? "WeatherNavItem--active" : ''}`} href='/?city=New York'>New York</a>
+                <a className={`WeatherNavItem ${city === 'Beijing' && !night?"WeatherNavItem--active":''} ${night ?'WeatherNavItem--night':''}
+                ${city === 'Beijing' && night ? "WeatherNavItem--active--night" : ''}`} href='/?city=Beijing'>Beijing</a>
+                <a className={`WeatherNavItem ${city === 'Shanghai' && !night?"WeatherNavItem--active":''} ${night ? 'WeatherNavItem--night' : ''}
+                ${city === 'Shanghai' && night ? "WeatherNavItem--active--night" : ''}`} href='/?city=Shanghai'>Shanghai</a>
+                <a className={`WeatherNavItem ${city === 'Tokyo' && !night? "WeatherNavItem--active" : ''} ${night ? 'WeatherNavItem--night' : ''}
+                ${city === 'Tokyo' && night ? "WeatherNavItem--active--night" : ''}`} href='/?city=Tokyo'>Tokyo</a>
+                <a className={`WeatherNavItem ${city === 'Seoul' && !night? "WeatherNavItem--active" : ''} ${night ? 'WeatherNavItem--night' : ''}
+                ${city === 'Seoul' && night ? "WeatherNavItem--active--night" : ''}`} href='/?city=Seoul'>Seoul</a>
+                <a className={`WeatherNavItem ${city === 'Berlin' && !night? "WeatherNavItem--active" : ''} ${night ? 'WeatherNavItem--night' : ''}
+                ${city === 'Berlin' && night ? "WeatherNavItem--active--night" : ''}`} href='/?city=Berlin'>Berlin</a>
+                <a className={`WeatherNavItem ${city === 'London' && !night? "WeatherNavItem--active" : '' } ${night ? 'WeatherNavItem--night' : ''}
+                ${city === 'London' && night ? "WeatherNavItem--active--night" : ''}`} href='/?city=London'>London</a>
+                <a className={`WeatherNavItem ${city === 'New York' && !night ? "WeatherNavItem--active" : ''} ${night ? 'WeatherNavItem--night' : ''}
+                ${city === 'New York' && night ? "WeatherNavItem--active--night" : ''}`} href='/?city=New York'>New York</a>
             </div>
             <div className='WeatherContent'>
-                <div className="WeatherContentHead">
-                    <h1>{weather.name?weather.name:""}</h1>
+                <div className={night ? "WeatherContentHead--night":"WeatherContentHead"}>
+                    <h1 className="cityName">{weather.name?weather.name:""}</h1>
                     <GetDateStr date={today}/>
-                    <p>{typeArray ? typeArray : ""}</p>
-                    <WeatherIcon weatherType={type} />
-                    <h3>{tempType==='C'?C:F}
+                    <h2 className="temp">{tempType==='C'?C:F}
                         <button onClick={() => setTempType('C')}
-                            className={`tempType ${tempType === 'C' ? 'C tempType__active' : ''}`}>°C</button>
+                            className={`${night ? 'tempType--night': 'tempType'} ${tempType === 'C'&& !night ? 'C tempType__active' : ''}
+                            ${tempType === 'C' && night? 'C--night tempType__active--night' : ''}`}>°C</button>
                         <button onClick={()=>setTempType('F')} 
-                            className={`tempType ${tempType === 'F'? 'F tempType__active' :''}`}>°F</button>
-                    </h3>
+                            className={`${night ? 'tempType--night' :'tempType' } ${tempType === 'F'&&!night? 'F tempType__active' :''}
+                            ${tempType === 'F' &&night? 'F--night tempType__active--night' : ''}`}>°F</button>
+                    </h2>
+                    <p className='weatherType'>{typeArray ? typeArray : ""}</p>
                 </div>
+                <WeatherIcon weatherType={type} night={night}/>
                 <div className="WeatherMainContent">
-                    <div className="WeatherItem">max temperature: <br></br>{weather.main ? weather.main.temp_max : ""}</div>
-                    <div className="WeatherItem">min temperature: <br></br>{weather.main ? weather.main.temp_min : ""}</div>
-                    <div className="WeatherItem">cloudiness: <br></br>{cloudy}</div>
-                    <div className="WeatherItem">visibility: <br></br>{weather ? weather.visibility : ""}</div>
-                    <div className="WeatherItem">humidity: <br></br>{weather.main ? weather.main.humidity : ""}</div>
-                    <div className="WeatherItem">wind speed: <br></br>{weather.wind ? weather.wind.speed : ""}</div>
+                    <div className={night ? "WeatherItem--night" :"WeatherItem"}><p className="dataTitle">max temperature </p>{weather.main ? weather.main.temp_max : ""}</div>
+                    <div className={night ? "WeatherItem--night" : "WeatherItem"}><p className="dataTitle">min temperature </p>{weather.main ? weather.main.temp_min : ""}</div>
+                    <div className={night ? "WeatherItem--night" : "WeatherItem"}><p className="dataTitle">cloudiness </p>{cloudy}</div>
+                    <div className={night ? "WeatherItem--night" : "WeatherItem"}><p className="dataTitle">visibility </p>{weather ? weather.visibility : ""}</div>
+                    <div className={night ? "WeatherItem--night" : "WeatherItem"}><p className="dataTitle">humidity </p>{weather.main ? weather.main.humidity : ""}</div>
+                    <div className={night ? "WeatherItem--night" : "WeatherItem"}><p className="dataTitle">wind speed </p>{weather.wind ? weather.wind.speed : ""}</div>
                 </div>
             </div>
         </div>
-       // </PageWrapper>
+        </PageWrapper>
     )
 }
 

@@ -1,8 +1,25 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
+.App{
+    margin:10px;
+    padding: 10px; 
+}
 
 body{
     box-sizing:border-box;
     font-family: 'Montserrat', sans-serif;
+}
+
+.dataTitle{
+  font-weight: bold;
+}
+
+.date{
+  font-size: 14px;
+  margin: 5px 0 20px 0;
+}
+
+.temp{
+  margin: 30px auto;
 }
 
 .tempType{
@@ -11,20 +28,46 @@ body{
     display: inline-block;
     color: gray;
     font-size: 20px;
+    background: none;
 }
 .tempType:hover{
     display: inline-block;
-    color: black;
+    color:rgb(88, 87, 87);
     font-size: 20px;
     text-decoration:underline; 
     font-weight: bolder;
+    transition: color 300ms ease-in;
 }
 
 .tempType__active{
   text-decoration:underline; 
   font-weight: bolder;
-  color:black;
-  text-shadow: 1px 1px rgba(97, 96, 96, 0.3);
+  color:rgb(39, 38, 38);
+  text-shadow: 1px 1px 2px rgba(97, 96, 96, 0.3);
+}
+
+.tempType--night{
+    font-family: 'Montserrat', sans-serif;
+    border:none;
+    display: inline-block;
+    color: white;
+    font-size: 20px;
+    background: none;
+}
+
+.tempType--night:hover{
+    display: inline-block;
+    font-size: 20px;
+    text-decoration:underline; 
+    font-weight: bolder;
+    transition: color 300ms ease-in;
+}
+
+.tempType__active--night{
+  text-decoration:underline; 
+  font-weight: bolder;
+  color:rgb(255, 255, 255);
+  text-shadow: 1px 1px 2px rgba(168, 168, 168, 0.3);
 }
 
 .C{
@@ -34,10 +77,11 @@ body{
   border-left:1px solid black;
 }
 
-
-.App{
-    margin:10px;
-    padding: 10px; 
+.C--night{
+  border-right:1px solid white;
+}
+.F--night{
+  border-left:1px solid white;
 }
 
 .WeatherContent{
@@ -47,8 +91,6 @@ body{
   align-items: center;
   justify-content: space-evenly;
   margin: 20px auto;
-  position: absolute;
-  left: 0;
 }
 
 .WeatherContentHead{
@@ -56,14 +98,21 @@ body{
   flex-direction:column;
   align-items: center;
   justify-content: space-evenly;
-  font-weight: bold;
+}
+
+.WeatherContentHead--night{
+  display: flex;
+  flex-direction:column;
+  align-items: center;
+  justify-content: space-evenly;
+  color:white;
 }
 
 .WeatherMainContent{
   display: flex;
   flex-direction: row;
   align-content: space-between;
-  margin: 30px 0 auto;
+  margin: 30px auto;
   flex-wrap: wrap;
 }
 
@@ -71,14 +120,24 @@ body{
   display: flex;
   flex-direction: column;
   text-align: center;
-  margin:0 10px auto;
-  padding: 20px;
+  margin:20px auto;
+  padding:10px 30px;
   border-right: 1px solid black;
+}
+
+.WeatherItem--night{
+  color:white;
+  border-right: 1px solid white;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  margin:20px auto;
+  padding:10px 30px;
 }
 
 .weatherIcon{
   display: block;
-  margin: 30px auto;
+  margin: 20px auto;
 }
 
 .WeatherNav{
@@ -94,10 +153,57 @@ body{
 .WeatherNavItem{
   margin:20px 0;
   padding: 10px;
-  transition:background-color 500ms ease;
+  text-decoration: none;
+  color:black;
+  font-weight: bolder;
+  text-align: center;
+}
+
+.WeatherNavItem:hover{
+  background-color: rgb(192, 190, 190);
+  border-radius: 5px;
+  text-decoration: none;
+  color:white;
+  transition: color 300ms ease;
+}
+
+.WeatherNavItem:active{
+  background-color: rgb(150, 149, 149);
+  border-radius: 5px;
+  text-decoration: none;
+  color:white;
+  position: relative;
+  top: 5px;
+  transition: bottom 500ms ease;
 }
 
 .WeatherNavItem--active{
-  background-color: azure;
-  color:red;
+  background-color: rgb(109, 108, 108);
+  border-radius: 5px;
+  color:white;
+}
+
+.WeatherNavItem--night{
+  color: white;
+}
+
+.WeatherNavItem--night:hover{
+  color: black;
+  background-color: rgba(231, 231, 231,0.6);
+}
+
+.WeatherNavItem--night:active{
+  color: black;
+  background-color: rgba(231, 231, 231,0.8);
+}
+
+.WeatherNavItem--active--night{
+  color: black;
+  background-color: rgba(255, 255, 255);
+  border-radius: 5px;
+}
+
+.weatherType{
+  font-weight: bold;
+  margin: 20px 0 5px 0;
 }

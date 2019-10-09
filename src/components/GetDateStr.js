@@ -15,6 +15,6 @@ export default function GetDateStr({date}){
     const s=`${strTime} - ${day}, ${ddate} ${month} ${year}`
     
     return(
-        <p>{s}</p>
+        <p className="date">{s}</p>
     )
 }
