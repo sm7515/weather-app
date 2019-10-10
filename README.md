@@ -1,9 +1,10 @@
 # Weather App
 
-A simple weather app that uses Openweathermap api.
+A simple weather app written in react.js.
 
 ### Features
 
+* uses Openweathermap api
 * display weather and time in different cities
 * have night mode and day mode
 * change background color based on cloudiness
