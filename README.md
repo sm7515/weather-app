@@ -10,3 +10,5 @@ A simple weather app written in react.js.
 * have night mode and day mode
 * change background color based on cloudiness
 * display image based on weather type
+
+![](weather-app-demo.gif)
