@@ -11,6 +11,8 @@ A simple weather app written in react.js.
 * change background color based on cloudiness
 * display image based on weather type
 
->### Demo
+
+### Demo
+
 
 ![](weather-app-demo.gif)
