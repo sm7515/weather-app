@@ -1,8 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState,createRef} from 'react';
 import axios from 'axios';
 import WeatherIcon from '../components/WeatherIcon';
 import GetDateStr from '../components/GetDateStr';
 import PageWrapper from '../components/PageWrapper';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSearch}  from '@fortawesome/free-solid-svg-icons';
 
 export default function Home(props){
     const apiKey="1c21be6b762ca0d7fa474238dda57f8a";
@@ -16,6 +18,7 @@ export default function Home(props){
     const [C, setC] = useState();
     const [tempType, setTempType]=useState('C');
     const [night, isNight] = useState(false);
+    const cityInput=createRef("")
 
     const queryWeatherAPI = function (cityParam) {
         axios.get(`http://api.openweathermap.org/data/2.5/weather?q=${cityParam}&units=metric&APPID=${apiKey}`)
@@ -49,10 +52,10 @@ export default function Home(props){
             return response
         })
     }
-
+    
     useEffect(()=>{
         const urlParams = new URLSearchParams(props.location.search);
-        const cityParam = urlParams.get('city') ? urlParams.get('city') : 'New York'
+        const cityParam=urlParams.get('city') ? urlParams.get('city') : 'New York'
         setCity(cityParam);
         queryWeatherAPI(cityParam); 
         queryF(cityParam);
@@ -66,18 +69,27 @@ export default function Home(props){
             isNight(true);
     })
 
-    // debug stuff
-    console.log(weather&&weather)
-    // // console.log(type && type.trim())
-    // // console.log(F);
-    // console.log(date)
-    // console.log(weather.timezone)
-
     function localTime(date, offset) {
         const d = new Date(date);
         const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
         const nd = new Date(utc + (3600000 * offset));
         return nd;
+    }
+
+    function handleKeyUp(e){
+        if(e.keyCode===13){
+            setCity(city);
+            const params = new URLSearchParams(`?city=${city}`);
+            console.log(params.get('city'))
+            queryWeatherAPI(city);
+            queryF(city);
+            setDate(new Date());
+            cityInput.current.value="";
+        }
+    }
+
+    function handleChange() {
+        setCity(cityInput.current.value)
     }
 
     return(
@@ -122,6 +134,11 @@ export default function Home(props){
                     <div className={night ? "WeatherItem--night" : "WeatherItem"}><p className="dataTitle">humidity </p>{weather.main ? weather.main.humidity : ""}</div>
                     <div className={night ? "WeatherItem--night" : "WeatherItem"}><p className="dataTitle">wind speed </p>{weather.wind ? weather.wind.speed : ""}</div>
                 </div>
+            </div>
+            <div className='searchBar'>
+                    <input ref={cityInput} className={night ? "input--night" : "input"}
+                            onKeyUp={handleKeyUp} onChange={handleChange}></input>
+                    <FontAwesomeIcon icon={faSearch} size="1.5x" className='search-icon' color={night?'white':"black"} />
             </div>
         </div>
         </PageWrapper>
