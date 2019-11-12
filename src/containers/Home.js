@@ -60,7 +60,7 @@ export default function Home(props){
         queryWeatherAPI(cityParam); 
         queryF(cityParam);
         setDate(new Date());
-    }, []);
+    }, [props.location.search]);
 
     const today = localTime(date, weather.timezone/3600);
     let hour=today.getHours();
@@ -76,16 +76,10 @@ export default function Home(props){
         return nd;
     }
 
-    function handleKeyUp(e){
-        if(e.keyCode===13){
+    function handleSubmit(){
             setCity(city);
-            const params = new URLSearchParams(`?city=${city}`);
-            console.log(params.get('city'))
-            queryWeatherAPI(city);
-            queryF(city);
-            setDate(new Date());
+            console.log(city)
             cityInput.current.value="";
-        }
     }
 
     function handleChange() {
@@ -136,9 +130,12 @@ export default function Home(props){
                 </div>
             </div>
             <div className='searchBar'>
+                    <form action="http://localhost:3000/" onSubmit={handleSubmit} method="GET">
                     <input ref={cityInput} className={night ? "input--night" : "input"}
-                            onKeyUp={handleKeyUp} onChange={handleChange}></input>
-                    <FontAwesomeIcon icon={faSearch} size="1.5x" className='search-icon' color={night?'white':"black"} />
+                        onChange={handleChange}></input>
+                    <input type='hidden' name="city" value={city}></input>
+                    <FontAwesomeIcon icon={faSearch} size="1x" className='search-icon' color={night?'white':"black"} />
+                </form>
             </div>
         </div>
         </PageWrapper>
